@@ -1,0 +1,105 @@
+:root {
+    --cornerRadius: 10px;
+    --textColor: #F5F5F5;
+    --backgroundColor: #1E1E1E;
+    --buttonColor: #0E916A;
+    --foregroundColor: #383838;
+}
+body {
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+}
+h1 {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: 40px;
+    margin-top: 20px;
+    font-family: "IBM Plex Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--textColor);
+}
+h2 {
+    font-family: "IBM Plex Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--textColor);
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+p {
+    font-size: 25px;
+    font-family: "Aleo", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    color: var(--textColor);
+}
+textarea {
+    width: 100%;
+    min-height: 100px;
+    background-color: var(--foregroundColor);
+    color: var(--textColor);
+    border: none;
+    padding: 10px;
+    border-radius: var(--cornerRadius);
+    resize: none;
+    font-size: 25px;
+    font-family: "Aleo", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow: hidden; /* Hide the scrollbar */
+}
+.AnswerTextArea {
+    width: 100%;
+    min-height: 2.3em; /* Adjust this value to fit one row */
+    height: 2.2em; /* This property is ignored */
+    background-color: var(--foregroundColor);
+    color: var(--textColor);
+    border: none;
+    padding: 10px;
+    border-radius: var(--cornerRadius);
+    resize: none;
+    font-family: "IBM Plex Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--textColor);
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-optical-sizing: auto;
+    font-style: normal;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow: hidden; /* Hide the scrollbar */
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+.button {
+    display: block;
+    width: 100%;
+    background-color: var(--buttonColor);
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+    font-family: "IBM Plex Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--textColor);
+    padding: 15px;
+    border: none;
+    border-radius: var(--cornerRadius);
+    margin-top: 20px;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: #007255;
+}
