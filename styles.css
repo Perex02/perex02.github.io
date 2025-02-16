@@ -2,8 +2,13 @@
     --cornerRadius: 10px;
     --textColor: #F5F5F5;
     --backgroundColor: #1E1E1E;
-    --buttonColor: #0E916A;
+    --buttonColorCorrect: #0E916A;
+    --buttonColorIncorrect: #c62b3b;
     --foregroundColor: #383838;
+
+    --green: #16ad80;
+    --red: #fd4c5e;
+    --yellow: #ffd059;
 }
 body {
     background-color: var(--backgroundColor);
@@ -81,12 +86,13 @@ textarea {
     overflow: hidden; /* Hide the scrollbar */
     display: flex;
     align-items: center;
-    vertical-align: middle;
+    margin: auto;
+    display: block;
 }
 .button {
     display: block;
     width: 100%;
-    background-color: var(--buttonColor);
+    background-color: var(--buttonColorCorrect);
     text-align: center;
     font-size: 32px;
     margin-bottom: 30px;
@@ -102,4 +108,8 @@ textarea {
 }
 .button:hover {
     background-color: #007255;
+}
+.placeholder {
+    color: var(--textColor);
+    opacity: 0.5;
 }

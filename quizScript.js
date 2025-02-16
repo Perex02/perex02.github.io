@@ -7,6 +7,11 @@ let recentWords = [];
 let currentGroup = [];
 const groupSize = 10;
 const pointsToPass = 2;
+const colorRed = getComputedStyle(document.documentElement).getPropertyValue('--red');
+const colorYellow = getComputedStyle(document.documentElement).getPropertyValue('--yellow');
+const colorGreen = getComputedStyle(document.documentElement).getPropertyValue('--green');
+const buttonColorCorrect = getComputedStyle(document.documentElement).getPropertyValue('--buttonColorCorrect');
+const buttonColorIncorrect = getComputedStyle(document.documentElement).getPropertyValue('--buttonColorIncorrect');
 
 function startQuiz() {
     if (words.length === 0) {
@@ -19,13 +24,24 @@ function startQuiz() {
     answerInput = document.getElementById("AnswerTextarea");
 
     // Add event listener for Enter key press
-    answerInput.addEventListener("keyup", function(event) {
+    document.addEventListener("keyup", function(event) {
         if (event.key === "Enter") {
-            if (!answered) {
-                checkAnswer();
-            } else {
-                nextWord();
-            }
+            event.preventDefault();
+            buttonClick();
+        }
+    });
+
+    answerInput.addEventListener("input", function() {
+        if (!answered) {
+            this.style.color = getComputedStyle(document.documentElement).getPropertyValue('--textColor');
+        }
+        this.style.height = "2em";
+        this.style.height = (this.scrollHeight) + "px";
+    });
+
+    answerInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
         }
     });
 
@@ -54,17 +70,25 @@ function checkAnswer() {
 
     if (userAnswer === correctAnswer) {
         document.getElementById("feedback").textContent = "Richtig!";
+        replaceTextareaWithDiv(highlightMistakes(userAnswer, correctAnswer));
         currentWord.score += 1;
+        button.style.backgroundColor = buttonColorCorrect;
+    } else if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        document.getElementById("feedback").textContent = "Fast richtig!";
+        replaceTextareaWithDiv(highlightMistakes(userAnswer, correctAnswer));
+        currentWord.score += 1;
+        button.style.backgroundColor = buttonColorCorrect;
     } else {
         document.getElementById("feedback").textContent = "Leider Falsch...";
         document.getElementById("query").textContent = `${currentWord.word} - ${correctAnswer}`;
+        replaceTextareaWithDiv(highlightMistakes(userAnswer, correctAnswer));
         currentWord.score -= 1;
+        button.style.backgroundColor = buttonColorIncorrect;
     }
 
     button.textContent = "Weiter";
     answered = true;
 
-//    console.log("Current word score:", currentWord.score);
     currentGroup.forEach(word => {
         console.log(`${word.word} - ${word.translation}: ${word.score}`);
     });
@@ -73,6 +97,63 @@ function checkAnswer() {
     if (isGroupCompleted()) {
         selectNewGroup();
     }
+}
+
+function replaceTextareaWithDiv(content) {
+    const textarea = document.getElementById("AnswerTextarea");
+    const div = document.createElement("div");
+    div.id = "AnswerTextarea";
+    div.className = "AnswerTextArea";
+    div.innerHTML = content;
+    div.style.height = textarea.style.height;
+    div.style.width = textarea.style.width;
+    textarea.parentNode.replaceChild(div, textarea);
+}
+
+function replaceDivWithTextarea() {
+    const div = document.getElementById("AnswerTextarea");
+    const textarea = document.createElement("textarea");
+    textarea.id = "AnswerTextarea";
+    textarea.className = "AnswerTextArea";
+    textarea.placeholder = "Antwort...";
+    textarea.style.padding = getComputedStyle(div).padding;
+    textarea.style.borderRadius = getComputedStyle(div).borderRadius;
+    textarea.style.backgroundColor = getComputedStyle(div).backgroundColor;
+    textarea.style.color = getComputedStyle(div).color;
+    textarea.addEventListener("input", function() {
+        if (!answered) {
+            this.style.color = getComputedStyle(document.documentElement).getPropertyValue('--textColor');
+        }
+        this.style.height = "2em";
+        this.style.height = (this.scrollHeight) + "px";
+    });
+    textarea.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    });
+    div.parentNode.replaceChild(textarea, div);
+    textarea.focus();
+}
+
+function highlightMistakes(userAnswer, correctAnswer) {
+    let result = '';
+    for (let i = 0; i < userAnswer.length; i++) {
+        if (correctAnswer[i] === undefined) {
+            result += `<span style="text-decoration: underline; color: ${colorRed};">${userAnswer[i]}</span>`;
+        } else if (userAnswer[i] !== correctAnswer[i]) {
+            if (userAnswer[i].toLowerCase() === correctAnswer[i].toLowerCase()) {
+                result += `<span style="text-decoration: underline; color: ${colorYellow};">${userAnswer[i]}</span>`;
+            } else if (userAnswer[i].normalize("NFD").replace(/[\u0300-\u036f]/g, "") === correctAnswer[i].normalize("NFD").replace(/[\u0300-\u036f]/g, "")) {
+                result += `<span style="text-decoration: underline; color: ${colorYellow};">${userAnswer[i]}</span>`;
+            } else {
+                result += `<span style="text-decoration: underline; color: ${colorRed};">${userAnswer[i]}</span>`;
+            }
+        } else {
+            result += `<span style="color: ${colorGreen};">${userAnswer[i]}</span>`;
+        }
+    }
+    return result;
 }
 
 function nextWord() {
@@ -96,12 +177,16 @@ function nextWord() {
         return;
     }
 
-//    console.log("Current word set to:", currentWord);
     document.getElementById("query").textContent = currentWord.word;
+    replaceDivWithTextarea(); // Replace div with textarea
+    answerInput = document.getElementById("AnswerTextarea");
     answerInput.value = ""; // Eingabefeld leeren
+    answerInput.style.color = getComputedStyle(document.documentElement).getPropertyValue('--textColor'); // Reset text color
+    button.style.backgroundColor = buttonColorCorrect; // Reset button color
 
     button.textContent = "Antworten";
     answered = false;
+    answerInput.focus(); // Place caret in the input field
 }
 
 function selectWordBasedOnScore() {
